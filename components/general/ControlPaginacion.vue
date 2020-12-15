@@ -16,14 +16,23 @@
         />
       </v-col>
       <!-- class="d-flex justify-start" -->
-      <v-col :cols="8" class="d-flex justify-end pr-7">
+      <!-- :length="totalPages" -->
+      <v-col :cols="8" class="d-flex justify-end align-center pr-7">
+        <v-btn text x-small class="px-0">
+          <v-icon>mdi-chevron-double-left</v-icon>
+        </v-btn>
         <v-pagination
           id="paginacion"
+          class="elevation-0 black--text"
           v-model="pageL"
-          :length="totalPages"
-          :total-visible="totalPages"
+          color="transparent"
+          :length="10"
+          :total-visible="10"
           @input="onPageChanged"
         ></v-pagination>
+        <v-btn text x-small class="px-0">
+          <v-icon>mdi-chevron-double-right</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -120,5 +129,37 @@ export default {
   font-size: 13px;
   max-width: 80px !important;
   width: 20px;
+}
+.v-pagination__navigation{
+  box-shadow: none;
+}
+.v-pagination__item{
+  color: #000;
+  box-shadow: none;
+
+      align-items: center;
+    border-radius: 4px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-weight: 500;
+    letter-spacing: 0.0892857143em;
+    justify-content: center;
+    outline: 0;
+    position: relative;
+    text-decoration: none;
+    text-indent: 0.0892857143em;
+    text-transform: uppercase;
+    transition-duration: 0.28s;
+    transition-property: box-shadow, transform, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.v-pagination__item--active{
+  color: blue !important;
 }
 </style>

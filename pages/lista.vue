@@ -2,10 +2,11 @@
  <div>
     <v-data-table
     :headers="headers"
-    :items="desserts"
-    sort-by="calories"
+    :items="initList"
     class="elevation-1"
     hide-default-footer
+    :sort-by.sync="sortBy"
+    :sort-desc.sync="sortDesc"
   >
     <template v-slot:top>
       <v-toolbar
@@ -20,6 +21,45 @@
         <v-spacer></v-spacer>
       </v-toolbar>
     </template>
+    <!-- HEADER - START -->
+
+    <!-- nombres y apellidos -->
+    <template  v-slot:header.nombres="{ item }">
+     <div class="content-header py-2">
+       <v-btn text class="text-none" @click="toggleOrder('nombres')">Nombre y Apellidos</v-btn>
+        <v-text-field flat hide-details dense solo label="Escribe aqui" outlined></v-text-field>
+     </div>
+    </template>
+
+    <!-- email/usuario -->
+    <template  v-slot:header.email="{ item }">
+     <div class="content-header py-2">
+       <v-btn text class="text-none" @click="toggleOrder('email')">Email/usuario</v-btn>
+        <v-text-field flat hide-details dense solo label="Escribe aqui" outlined></v-text-field>
+     </div>
+    </template>
+
+    <!-- opciopnes -->
+    <template  v-slot:header.actions="{ item }">
+     <v-btn color="primary" >Buscar</v-btn>
+    </template>
+
+
+
+    <!-- HEADER - START  -->
+
+
+    <!-- BODY - START  -->
+    <template  v-slot:item.rol="{ item }">
+     <span v-if="item.rol.length == 1">{{item.rol[0]}}</span>
+     <v-select v-else dense :items="item.rol"  :value="item.rol[0]" label="rol"  solo flat></v-select>
+    </template>
+
+
+    <!-- BODY - END  -->
+
+
+
     <template v-slot:item.actions="{ item }">
       <v-icon
         small
@@ -35,16 +75,9 @@
         mdi-delete
       </v-icon>
     </template>
-    <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
-    </template>
   </v-data-table>
-   <control-pagination :total-show="productsTotal" :total-data="total_data" :page="page" :total-pages="total_pages" :length-page="length_page" @lengthPageChanged="lengthPageChanged" @pageChanged="pageChanged"/>
+   <control-pagination :total-show="totalList" :total-data="total_data" :page="page" :total-pages="total_pages" :length-page="length_page" @lengthPageChanged="lengthPageChanged" @pageChanged="pageChanged"/>
+
  </div>
 
 </template>
@@ -64,23 +97,52 @@ export default {
     "control-pagination": controlPagination,
   },
   data: () => ({
+     sortBy: '',
+     itemRol:'rol',
+      sortDesc: false,
       dialog: false,
       dialogDelete: false,
       headers: [
         {
-          text: 'Dessert (100g serving)',
+          text: 'nombres',
           align: 'start',
           sortable: false,
-          value: 'name',
+          value: 'nombres',
+          width:'150'
         },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
+        { text: 'email', value: 'email', width:'150', sortable: false, },
+        { text: 'rol', value: 'rol', width:'150' },
+        { text: 'tienda', value: 'tienda' },
+        { text: 'estado', value: 'estado' },
+        { text: 'Opciones', value: 'actions', sortable: false, },
       ],
       desserts: [],
 
     }),
 
     computed: {
+      initList(){
+        let list = [
+          {
+            nombres:'genaro pretill',
+            email:'genaro@test.com',
+            rol:['user','rol'],
+            tienda:'mini market lucho',
+            estado:'Activo'
+          },
+           {
+            nombres:'jose luis',
+            email:'ojse@test.com',
+            rol:['rol'],
+            tienda:'polleria polaco',
+            estado:'Activo'
+          }
+        ]
+        return list
+      },
+      totalList(){
+        return this.initList.length
+      }
     },
 
 
@@ -118,8 +180,18 @@ export default {
           this.products = data.productos
           this.manageData(data)
         }
-      else return data.productos
-    },
+       else return data.productos
+      },
+       toggleOrder (value) {
+        this.sortDesc = !this.sortDesc
+        this.sortBy = value
+      },
+
+      // nextSort () {
+      //   let index = this.headers.findIndex(h => h.value === this.sortBy)
+      //   index = (index + 1) % this.headers.length
+      //   this.sortBy = this.headers[index].value
+      // },
 
 
     },
